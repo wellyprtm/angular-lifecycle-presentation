@@ -12,15 +12,7 @@ const nextConfig = {
   },
   images: {
     unoptimized: true
-  },
-  // Build optimizations
-  swcMinify: true,
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
-  // Replace with your actual repo name
-  basePath: process.env.NODE_ENV === 'production' ? '/angular-lifecycle-presentation' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/angular-lifecycle-presentation/' : '',
+  }
 }
 
 export default nextConfig
