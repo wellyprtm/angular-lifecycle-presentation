@@ -46,14 +46,14 @@ const SlideTemplate = ({
       </div>
     </div>
 
-    {/* Content Area */}
-    <div className="flex-1 p-8 overflow-auto pt-16">
-      <div className="max-w-7xl mx-auto h-full flex items-start justify-center">
+    {/* Content Area with bottom margin for navigation */}
+    <div className="flex-1 p-8 overflow-auto pb-48">
+      <div className="max-w-7xl mx-auto h-full flex items-start justify-center mb-40">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
-          className="w-full pt-8"
+          className="w-full pt-8 pb-24"
         >
           {slide.content}
         </motion.div>
@@ -637,73 +637,96 @@ export default function HomePage() {
         )}
       </AnimatePresence>
 
-      {/* Modern Navigation Controls */}
-      <motion.div
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-6 bg-white/90 backdrop-blur-lg px-8 py-4 rounded-2xl shadow-2xl border border-white/20"
-      >
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={prevSlide}
-          className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white flex items-center justify-center font-bold shadow-lg hover:shadow-xl transition-all"
-        >
-          ←
-        </motion.button>
-
-        <div className="flex items-center gap-3">
-          {slides.map((_, index) => (
+      {/* Fixed Bottom Navigation Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-slate-200 shadow-2xl z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="flex items-center justify-between"
+          >
+            {/* Left: Previous Button */}
             <motion.button
-              key={index}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => goToSlide(index + 1)}
-              className={`transition-all duration-300 rounded-full ${
-                currentSlide === index + 1
-                  ? "w-8 h-3 bg-gradient-to-r from-blue-500 to-purple-600"
-                  : "w-3 h-3 bg-slate-300 hover:bg-slate-400"
-              }`}
-            />
-          ))}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={prevSlide}
+              className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold shadow-lg hover:shadow-xl transition-all"
+            >
+              <span className="text-lg">←</span>
+              <span className="hidden sm:block">Previous</span>
+            </motion.button>
+
+            {/* Center: Slide Indicators */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                {slides.map((_, index) => (
+                  <motion.button
+                    key={index}
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => goToSlide(index + 1)}
+                    className={`transition-all duration-300 rounded-full ${
+                      currentSlide === index + 1
+                        ? "w-10 h-4 bg-gradient-to-r from-blue-500 to-purple-600"
+                        : "w-4 h-4 bg-slate-300 hover:bg-slate-400"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Slide Counter */}
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full">
+                <span className="text-sm font-medium text-slate-600">
+                  {currentSlide} / {slides.length}
+                </span>
+              </div>
+            </div>
+
+            {/* Right: Control Buttons */}
+            <div className="flex items-center gap-3">
+              {/* Auto-play Button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsAutoPlay(!isAutoPlay)}
+                className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold shadow-lg transition-all ${
+                  isAutoPlay
+                    ? "bg-gradient-to-r from-red-500 to-pink-600 text-white"
+                    : "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
+                }`}
+                title={isAutoPlay ? "Pause Auto-play" : "Start Auto-play"}
+              >
+                {isAutoPlay ? "⏸" : "▶"}
+              </motion.button>
+
+              {/* Reset Button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => goToSlide(1)}
+                className="w-12 h-12 rounded-xl bg-gradient-to-r from-slate-500 to-slate-600 text-white flex items-center justify-center font-bold shadow-lg hover:shadow-xl transition-all"
+                title="Go to First Slide"
+              >
+                ↺
+              </motion.button>
+
+              {/* Next Button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={nextSlide}
+                className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold shadow-lg hover:shadow-xl transition-all"
+              >
+                <span className="hidden sm:block">Next</span>
+                <span className="text-lg">→</span>
+              </motion.button>
+            </div>
+          </motion.div>
         </div>
+      </div>
 
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={nextSlide}
-          className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white flex items-center justify-center font-bold shadow-lg hover:shadow-xl transition-all"
-        >
-          →
-        </motion.button>
-
-        <div className="w-px h-8 bg-slate-300 mx-2" />
-
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsAutoPlay(!isAutoPlay)}
-          className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold shadow-lg transition-all ${
-            isAutoPlay
-              ? "bg-gradient-to-r from-red-500 to-pink-600 text-white"
-              : "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
-          }`}
-        >
-          {isAutoPlay ? "⏸" : "▶"}
-        </motion.button>
-
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => goToSlide(1)}
-          className="w-12 h-12 rounded-xl bg-gradient-to-r from-slate-500 to-slate-600 text-white flex items-center justify-center font-bold shadow-lg hover:shadow-xl transition-all"
-        >
-          ↺
-        </motion.button>
-      </motion.div>
-
-      {/* Slide Thumbnails */}
+      {/* Slide Thumbnails - Adjusted position */}
       <motion.div
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
@@ -728,14 +751,14 @@ export default function HomePage() {
         ))}
       </motion.div>
 
-      {/* Instructions */}
+      {/* Instructions - Adjusted position */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
         className="absolute top-6 right-6 bg-black/70 text-white px-4 py-2 rounded-xl text-sm backdrop-blur-sm"
       >
-        Use ← → keys or click controls to navigate
+        Use ← → keys or navigation bar to navigate
       </motion.div>
     </div>
   )
