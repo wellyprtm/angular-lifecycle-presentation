@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
+  distDir: 'out',
   trailingSlash: true,
   skipTrailingSlashRedirect: true,
-  distDir: 'out',
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -13,8 +13,12 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  // Only add basePath if your repo name is NOT your GitHub username
-  // Replace 'your-repo-name' with your actual repository name
+  // Build optimizations
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  // Replace with your actual repo name
   basePath: process.env.NODE_ENV === 'production' ? '/angular-lifecycle-presentation' : '',
   assetPrefix: process.env.NODE_ENV === 'production' ? '/angular-lifecycle-presentation/' : '',
 }
